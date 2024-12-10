@@ -25,6 +25,26 @@ class Biblioteca {
         });
     }
 
+    public function prestarLibro($id, $usuario) {
+        foreach ($this->libros as $libro) {
+            if ($libro->getId() === $id && $libro->isDisponible()) {
+                $libro->prestar($usuario);
+                return true;
+            }
+        }
+        return false; // No se puede prestar (no disponible o no encontrado)
+    }
+
+    public function devolverLibro($id) {
+        foreach ($this->libros as $libro) {
+            if ($libro->getId() === $id && !$libro->isDisponible()) {
+                $libro->devolver();
+                return true;
+            }
+        }
+        return false; // No se puede devolver (ya disponible o no encontrado)
+    }
+
     public function obtenerLibros() {
         return $this->libros;
     }

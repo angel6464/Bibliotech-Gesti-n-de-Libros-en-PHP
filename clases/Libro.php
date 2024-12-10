@@ -5,6 +5,7 @@ class Libro {
     private $autor;
     private $categoria;
     private $disponible;
+    private $usuarioPrestamo;
 
     public function __construct($id, $titulo, $autor, $categoria, $disponible = true) {
         $this->id = $id;
@@ -12,6 +13,7 @@ class Libro {
         $this->autor = $autor;
         $this->categoria = $categoria;
         $this->disponible = $disponible;
+        $this->usuarioPrestamo = null;
     }
 
     public function getId() {
@@ -34,8 +36,18 @@ class Libro {
         return $this->disponible;
     }
 
-    public function setDisponibilidad($estado) {
-        $this->disponible = $estado;
+    public function getUsuarioPrestamo() {
+        return $this->usuarioPrestamo;
+    }
+
+    public function prestar($usuario) {
+        $this->disponible = false;
+        $this->usuarioPrestamo = $usuario;
+    }
+
+    public function devolver() {
+        $this->disponible = true;
+        $this->usuarioPrestamo = null;
     }
 
     public function editar($titulo, $autor, $categoria) {
