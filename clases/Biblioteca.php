@@ -1,4 +1,6 @@
-<?php
+
+
+<?php //Biblioteca.php
 class Biblioteca {
     private $libros = [];
 

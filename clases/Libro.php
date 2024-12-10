@@ -1,4 +1,4 @@
-<?php
+<?php //Libro.php
 class Libro {
     private $id;
     private $titulo;

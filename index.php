@@ -3,13 +3,13 @@ session_start();
 require_once 'clases/Libro.php';
 require_once 'clases/Biblioteca.php';
 
-// Inicializamos la biblioteca en la sesión
+// Inicializar la biblioteca en la sesión
 if (!isset($_SESSION['biblioteca'])) {
     $_SESSION['biblioteca'] = serialize(new Biblioteca());
 }
 $biblioteca = unserialize($_SESSION['biblioteca']);
 
-// Agregamos libros iniciales solo la primera vez
+// Agregar libros iniciales solo la primera vez
 if (empty($biblioteca->obtenerLibros())) {
     $biblioteca->agregarLibro(new Libro(1, "1984", "George Orwell", "Ficción"));
     $biblioteca->agregarLibro(new Libro(2, "El Principito", "Antoine de Saint-Exupéry", "Ficción"));
@@ -19,19 +19,30 @@ if (empty($biblioteca->obtenerLibros())) {
 // Procesar acciones desde los botones de la tabla
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'];
-    $id = (int)$_POST['id'];
-
-    if ($accion === 'prestar') {
+    
+    if ($accion === 'agregar') {
+        // Agregar libro
+        $titulo = $_POST['titulo'];
+        $autor = $_POST['autor'];
+        $categoria = $_POST['categoria'];
+        $id = count($biblioteca->obtenerLibros()) + 1; // Generar ID secuencial
+        $biblioteca->agregarLibro(new Libro($id, $titulo, $autor, $categoria));
+    } elseif ($accion === 'prestar' && isset($_POST['id']) && isset($_POST['usuario'])) {
+        // Prestar libro
+        $id = (int)$_POST['id'];
         $usuario = $_POST['usuario'];
         $biblioteca->prestarLibro($id, $usuario);
-    } elseif ($accion === 'devolver') {
+    } elseif ($accion === 'devolver' && isset($_POST['id'])) {
+        // Devolver libro
+        $id = (int)$_POST['id'];
         $biblioteca->devolverLibro($id);
     }
 
+    // Guardar los cambios en la sesión
     $_SESSION['biblioteca'] = serialize($biblioteca);
 }
 
-// obtenemos todos los libros para mostrar en la tabla
+// Obtener todos los libros para mostrar en la tabla
 $libros = $biblioteca->obtenerLibros();
 ?>
 
